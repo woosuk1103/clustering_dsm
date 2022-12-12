@@ -11,9 +11,6 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 cf.go_offline(connected=True)
 
-
-
-
 name_list = ['Adapter A-piliar roof rail', 'Adapter B-piliar roof rail', 'A-pillar inner', 'A-pillar reinforcement', 'Back panel', 'Back panel side', 'Back panel upper', 
              'Body side', 'B-Pillar', 'Channel', 'Cowl', 'Crosstrack rear floor', 'Dash cross member', 'Dash panel', 'Floor panel', 'Front header', 'Front side rail', 
              'Front suspension Housing', 'Heelkick', 'Rear floor panel', 'Rear floor side', 'Rear header', 'Rear panel inner lower', 'Rear panel Inner Upper', 
@@ -64,6 +61,7 @@ class Moduleviser(gym.Env):
         return np.array(self.state, dtype=np.int32), self.CE, self.name_list, reward, correlation_matrix, new_sorted_component_list, done, {}
 
     def reset(self):
+        print("Reset!")
         state = []
         for i in range(38):
             state.append([0])
