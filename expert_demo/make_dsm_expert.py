@@ -76,32 +76,17 @@ for episode in range(10): # n_trajectories : 10
         trajectory.append(state_in_array)
         step += 1
 
-    # trajectory_numpy = np.array(trajectory, float)
-    # print("trajectory_numpy.shape", trajectory_numpy.shape)
     trajectories.append(trajectory)
-
-    # correlation_matrix_numpy = np.array(correlation_matrix, float)
-    # print("correlation_matrix_numpy.shape", correlation_matrix_numpy.shape)
 
     correlation_matrices.append(correlation_matrix)
     new_sorted_component_lists.append(new_sorted_component_list)
     episode_step += 1
 
-# k = correlation_matrices[-1][-1]
-# k = k[:-1]
-# k = np.reshape(k, (38, 38))
-# for i in range(len(k)):
-#     print(k[i])
-
 print(new_sorted_component_lists[-1][-1])
-
-
 
 np_trajectories = np.array(trajectories, float)
 np_correlation_matrices = np.array(correlation_matrices, float)
 np_new_sorted_component_lists = np.array(new_sorted_component_lists, dtype=object)
-# print("np_trajectories.shape", np_trajectories.shape)
-# print("np_correlation_matrices.shape", np_correlation_matrices.shape)
 
 np.save("expert_trajectories", arr=np_trajectories)
 np.save("correlation_matrices", arr=np_correlation_matrices)
