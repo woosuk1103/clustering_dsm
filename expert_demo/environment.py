@@ -61,7 +61,7 @@ class Moduleviser(gym.Env):
         return np.array(self.state, dtype=np.int32), self.CE, self.name_list, reward, correlation_matrix, new_sorted_component_list, done, {}
 
     def reset(self):
-        print("Reset!")
+
         state = []
         for i in range(38):
             state.append([0])
