@@ -231,17 +231,17 @@ class Moduleviser(gym.Env):
                     clustered_matrix[new_order.index(i)][new_order.index(j)] = 1
                     clustered_matrix[new_order.index(j)][new_order.index(i)] = 1
 
-        # convert modularized_result into connection_matrix
+        # convert modularized_result into base_matrix
         modularized_result = []
-        connection_matrix = self.modularized_result_to_connection_matrix(modularized_result)
+        base_matrix = self.modularized_result_to_base_matrix(modularized_result)
 
-        optimal_connection_matrix = self.modularized_result_to_connection_matrix(optimal_modularized_result)
+        optimal_base_matrix = self.modularized_result_to_base_matrix(optimal_modularized_result)
 
         # calculate reward compared to optimal_modularized_result
         reward = 0.0
-        for i in range(len(connection_matrix)):
-            for j in range(len(connection_matrix)):
-                if connection_matrix[i][j] == optimal_connection_matrix[i][j]:
+        for i in range(len(base_matrix)):
+            for j in range(len(base_matrix)):
+                if base_matrix[i][j] == optimal_base_matrix[i][j]:
                     reward += 1.0
 
         # initialize the S_in and S_out
@@ -278,13 +278,13 @@ class Moduleviser(gym.Env):
 
         return clustered_matrix, CE, new_name_list, reward, correlation_matrix, new_sorted_component_list
 
-    def modularized_result_to_connection_matrix(self, modularized_result):
+    def modularized_result_to_base_matrix(self, modularized_result):
 
-        connection_matrix = np.identity(38)
+        base_matrix = np.identity(38)
 
         for i in range(len(modularized_result)):
             for j in range(len(modularized_result[i])):
                 for k in range(j, len(modularized_result[i])):
-                    connection_matrix[name_list.index(modularized_result[i][j])][name_list.index(modularized_result[i][k])] = 1
+                    base_matrix[name_list.index(modularized_result[i][j])][name_list.index(modularized_result[i][k])] = 1
 
-        return connection_matrix
+        return base_matrix
