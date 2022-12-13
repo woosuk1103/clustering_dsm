@@ -63,7 +63,7 @@ for episode in range(10): # n_trajectories : 10
         # fig.show()
 
 
-        if step > 200: # trajectory_length : 150
+        if step > 180: # trajectory_length : 150
             break
 
         state_in_array = np.zeros(1444)
