@@ -1,6 +1,6 @@
 import numpy as np
 from typing import Optional
-import cufflinks as cf
+# import cufflinks as cf
 import gym
 import copy
 from gym import spaces
@@ -9,7 +9,7 @@ from gym.error import DependencyNotInstalled
 import cv2
 import matplotlib.pyplot as plt
 import plotly.express as px
-cf.go_offline(connected=True)
+# cf.go_offline(connected=True)
 
 name_list = ['Adapter A-piliar roof rail', 'Adapter B-piliar roof rail', 'A-pillar inner', 'A-pillar reinforcement', 'Back panel', 'Back panel side', 'Back panel upper', 
              'Body side', 'B-Pillar', 'Channel', 'Cowl', 'Crosstrack rear floor', 'Dash cross member', 'Dash panel', 'Floor panel', 'Front header', 'Front side rail', 
