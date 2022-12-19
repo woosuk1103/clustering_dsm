@@ -23,6 +23,14 @@ optimal_modularized_result = [['Adapter B-piliar roof rail', 'Body side', 'Front
                  ['Adapter A-piliar roof rail', 'A-pillar inner', 'A-pillar reinforcement', 'Cowl', 'Dash panel', 'Front suspension Housing', 'Shotgun'], 
                  ['B-Pillar', 'Crosstrack rear floor', 'Heelkick', 'Rear floor panel', 'Rear panel inner lower', 'Rear side floor', 'Rear side rail frt', 'Reinforcement rocker rear', 'Rocker', 'Wheelhouse']]
 
+
+init_if_matrix = np.eye(38, dtype=int)
+
+opt_if_matrix = []
+
+init_base_matrix = []
+opt_base_matrix = []
+
 class Moduleviser(gym.Env):
 
     metadata = {
