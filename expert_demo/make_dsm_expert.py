@@ -33,15 +33,20 @@ for episode in range(10): # n_trajectories : 10
         col = int(input_col)
 
         action = row * 38 + col
-        state, CE, name_list, reward, correlation_matrix, new_sorted_component_list, done, _ = env.step(action, correlation_matrix)
+        state, clustered_matrix, base_matrix, CE, name_list, reward, correlation_matrix, new_sorted_component_list, done, _ = env.step(action, correlation_matrix)
 
         temp = 0
-        for i in range(len(state)):
-            for j in range(len(state[0])):
-                if state[i][j] == 1:
+        for i in range(len(clustered_matrix)):
+            for j in range(len(clustered_matrix[0])):
+                if clustered_matrix[i][j] == 1:
                     temp += 1
         print(temp)
         print(new_sorted_component_list)
+        
+        for i in range(len(base_matrix)):
+            print(base_matrix[i])    
+            
+            
         print("CE:", CE)
         # global 
 
@@ -66,14 +71,14 @@ for episode in range(10): # n_trajectories : 10
         if step > 180: # trajectory_length : 150
             break
 
-        state_in_array = np.zeros(1444)
-        for i in range(len(state)):
-            for j in range(len(state[0])):
+        clustered_matrix_in_array = np.zeros(1444)
+        for i in range(len(clustered_matrix)):
+            for j in range(len(clustered_matrix[0])):
                 idx = i * 38 + j
-                state_in_array[idx] = state[i][j]
+                clustered_matrix_in_array[idx] = clustered_matrix[i][j]
                 
-        state_in_array = np.append(state_in_array, np.array(action))
-        trajectory.append(state_in_array)
+        clustered_matrix_in_array = np.append(clustered_matrix_in_array, np.array(action))
+        trajectory.append(clustered_matrix_in_array)
         step += 1
 
     trajectories.append(trajectory)

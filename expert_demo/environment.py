@@ -1,15 +1,15 @@
-import numpy as np
-from typing import Optional
-# import cufflinks as cf
-import gym
 import copy
+from typing import Optional
+
+import numpy as np
+
+import gym
 from gym import spaces
 
-from gym.error import DependencyNotInstalled
 import cv2
 import matplotlib.pyplot as plt
 import plotly.express as px
-# cf.go_offline(connected=True)
+
 # 38 
 name_list = ['Adapter A-piliar roof rail', 'Adapter B-piliar roof rail', 'A-pillar inner', 'A-pillar reinforcement', 'Back panel', 'Back panel side', 'Back panel upper', 
              'Body side', 'B-Pillar', 'Channel', 'Cowl', 'Crosstrack rear floor', 'Dash cross member', 'Dash panel', 'Floor panel', 'Front header', 'Front side rail', 
@@ -22,159 +22,6 @@ optimal_modularized_result = [['Adapter B-piliar roof rail', 'Body side', 'Front
                  ['Back panel', 'Back panel side', 'Back panel upper', 'Rear floor side', 'Rear side rail', 'Spare wheel well'], 
                  ['Adapter A-piliar roof rail', 'A-pillar inner', 'A-pillar reinforcement', 'Cowl', 'Dash panel', 'Front suspension Housing', 'Shotgun'], 
                  ['B-Pillar', 'Crosstrack rear floor', 'Heelkick', 'Rear floor panel', 'Rear panel inner lower', 'Rear side floor', 'Rear side rail frt', 'Reinforcement rocker rear', 'Rocker', 'Wheelhouse']]
-
-
-init_if_matrix = np.eye(38, dtype=int)
-init_if_matrix[0][2] = 1
-init_if_matrix[0][3] = 1
-init_if_matrix[0][7] = 1
-init_if_matrix[0][10] = 1
-init_if_matrix[0][32] = 1
-init_if_matrix[0][35] = 1
-
-init_if_matrix[1][7] = 1
-init_if_matrix[1][8] = 1
-init_if_matrix[1][32] = 1
-
-init_if_matrix[2][10] = 1
-init_if_matrix[2][13] = 1
-init_if_matrix[2][14] = 1
-init_if_matrix[2][29] = 1
-init_if_matrix[2][35] = 1
-
-init_if_matrix[3][7] = 1
-init_if_matrix[3][13] = 1
-init_if_matrix[3][29] = 1
-init_if_matrix[3][35] = 1
-
-init_if_matrix[4][5] = 1
-init_if_matrix[4][6] = 1
-init_if_matrix[4][20] = 1
-init_if_matrix[4][25] = 1
-init_if_matrix[4][36] = 1
-
-init_if_matrix[5][6] = 1
-init_if_matrix[5][20] = 1
-
-init_if_matrix[6][20] = 1
-init_if_matrix[6][22] = 1
-init_if_matrix[6][23] = 1
-init_if_matrix[6][37] = 1
-
-init_if_matrix[7][8] = 1
-init_if_matrix[7][14] = 1
-init_if_matrix[7][22] = 1
-init_if_matrix[7][23] = 1
-init_if_matrix[7][28] = 1
-init_if_matrix[7][29] = 1
-init_if_matrix[7][30] = 1
-init_if_matrix[7][31] = 1
-init_if_matrix[7][32] = 1
-init_if_matrix[7][33] = 1
-init_if_matrix[7][34] = 1
-
-init_if_matrix[8][28] = 1
-init_if_matrix[8][29] = 1
-
-init_if_matrix[9][12] = 1
-init_if_matrix[9][13] = 1
-init_if_matrix[9][18] = 1
-init_if_matrix[9][33] = 1
-init_if_matrix[9][34] = 1
-
-init_if_matrix[10][13] = 1
-init_if_matrix[10][17] = 1
-init_if_matrix[10][35] = 1
-
-init_if_matrix[11][19] = 1
-init_if_matrix[11][27] = 1
-init_if_matrix[11][36] = 1
-
-init_if_matrix[12][13] = 1
-
-init_if_matrix[13][14] = 1
-init_if_matrix[13][16] = 1
-init_if_matrix[13][17] = 1
-
-init_if_matrix[14][16] = 1
-init_if_matrix[14][18] = 1
-init_if_matrix[14][26] = 1
-init_if_matrix[14][27] = 1
-init_if_matrix[14][29] = 1
-
-init_if_matrix[15][31] = 1
-init_if_matrix[15][32] = 1
-
-init_if_matrix[16][17] = 1
-init_if_matrix[16][26] = 1
-
-init_if_matrix[17][35] = 1
-
-init_if_matrix[18][19] = 1
-init_if_matrix[18][24] = 1
-init_if_matrix[18][27] = 1
-init_if_matrix[18][28] = 1
-init_if_matrix[18][29] = 1
-
-init_if_matrix[19][24] = 1
-init_if_matrix[19][27] = 1
-init_if_matrix[19][36] = 1
-
-init_if_matrix[20][24] = 1
-init_if_matrix[20][25] = 1
-init_if_matrix[20][27] = 1
-init_if_matrix[20][36] = 1
-init_if_matrix[20][37] = 1
-
-init_if_matrix[21][31] = 1
-
-init_if_matrix[22][23] = 1
-init_if_matrix[22][27] = 1
-init_if_matrix[22][28] = 1
-init_if_matrix[22][29] = 1
-init_if_matrix[22][37] = 1
-
-init_if_matrix[23][31] = 1
-init_if_matrix[23][37] = 1
-
-init_if_matrix[24][25] = 1
-init_if_matrix[24][27] = 1
-init_if_matrix[24][28] = 1
-init_if_matrix[24][29] = 1
-init_if_matrix[24][37] = 1
-
-init_if_matrix[25][27] = 1
-init_if_matrix[25][36] = 1
-init_if_matrix[25][37] = 1
-
-init_if_matrix[26][27] = 1
-init_if_matrix[26][29] = 1
-
-init_if_matrix[27][28] = 1
-init_if_matrix[27][29] = 1
-init_if_matrix[27][37] = 1
-
-init_if_matrix[28][29] = 1
-init_if_matrix[28][37] = 1
-
-init_if_matrix[29][33] = 1
-init_if_matrix[29][34] = 1
-
-init_if_matrix[30][31] = 1
-init_if_matrix[30][32] = 1
-
-init_if_matrix[31][32] = 1
-
-# make matrix symmetical
-for i in range(len(init_if_matrix)):
-    for j in range(len(init_if_matrix[0])):
-        if init_if_matrix[i][j] == 1:
-            init_if_matrix[j][i] = 1
-            
-# there is no optimal state for if_matrix, it exists only for base_matrix
-
-# set initial base matrix
-init_base_matrix = np.eye(38, dtype=int)
 
 # make optimal base matrix
 opt_base_matrix = np.eye(38, dtype=int)
@@ -343,8 +190,8 @@ opt_base_matrix[31][32] = 1
 opt_base_matrix[33][34] = 1
 
 # make matrix symmetical
-for i in range(len(init_if_matrix)):
-    for j in range(len(init_if_matrix[0])):
+for i in range(len(opt_base_matrix)):
+    for j in range(len(opt_base_matrix[0])):
         if opt_base_matrix[i][j] == 1:
             opt_base_matrix[j][i] = 1
 
@@ -369,7 +216,7 @@ class Moduleviser(gym.Env):
 
     def step(self, action, correlation_matrix):
 
-        state = np.reshape(self.state, (38,38))
+        state = self.state
 
         row, col = divmod(action, 38)
 
@@ -380,60 +227,172 @@ class Moduleviser(gym.Env):
             state[row][col] = 0
             state[col][row] = 0
         
-        self.state, self.CE, self.name_list, reward, correlation_matrix, new_sorted_component_list = self.clustering(state, correlation_matrix)
-        # done = bool(self.CE >= 0.03)
-        done = True
-        return np.array(self.state, dtype=np.int32), self.CE, self.name_list, reward, correlation_matrix, new_sorted_component_list, done, {}
+        self.state, clustered_matrix, self.base_matrix, self.CE, self.name_list, reward, correlation_matrix, new_sorted_component_list = self.clustering(state, correlation_matrix)
+        
+        # compare present base_matrix with optimal base_matrix 
+        if self.base_matrix.all() == opt_base_matrix.all():
+            done = True
+        
+        return self.state, clustered_matrix, self.base_matrix, self.CE, self.name_list, reward, correlation_matrix, new_sorted_component_list, done, {}
 
     def reset(self):
 
-        state = []
-        for i in range(38):
-            state.append([0])
+        init_if_matrix = np.eye(38, dtype=int)
+
+        init_if_matrix[0][2] = 1
+        init_if_matrix[0][3] = 1
+        init_if_matrix[0][7] = 1
+        init_if_matrix[0][10] = 1
+        init_if_matrix[0][32] = 1
+        init_if_matrix[0][35] = 1
+
+        init_if_matrix[1][7] = 1
+        init_if_matrix[1][8] = 1
+        init_if_matrix[1][32] = 1
+
+        init_if_matrix[2][10] = 1
+        init_if_matrix[2][13] = 1
+        init_if_matrix[2][14] = 1
+        init_if_matrix[2][29] = 1
+        init_if_matrix[2][35] = 1
+
+        init_if_matrix[3][7] = 1
+        init_if_matrix[3][13] = 1
+        init_if_matrix[3][29] = 1
+        init_if_matrix[3][35] = 1
+
+        init_if_matrix[4][5] = 1
+        init_if_matrix[4][6] = 1
+        init_if_matrix[4][20] = 1
+        init_if_matrix[4][25] = 1
+        init_if_matrix[4][36] = 1
+
+        init_if_matrix[5][6] = 1
+        init_if_matrix[5][20] = 1
+
+        init_if_matrix[6][20] = 1
+        init_if_matrix[6][22] = 1
+        init_if_matrix[6][23] = 1
+        init_if_matrix[6][37] = 1
+
+        init_if_matrix[7][8] = 1
+        init_if_matrix[7][14] = 1
+        init_if_matrix[7][22] = 1
+        init_if_matrix[7][23] = 1
+        init_if_matrix[7][28] = 1
+        init_if_matrix[7][29] = 1
+        init_if_matrix[7][30] = 1
+        init_if_matrix[7][31] = 1
+        init_if_matrix[7][32] = 1
+        init_if_matrix[7][33] = 1
+        init_if_matrix[7][34] = 1
+
+        init_if_matrix[8][28] = 1
+        init_if_matrix[8][29] = 1
+
+        init_if_matrix[9][12] = 1
+        init_if_matrix[9][13] = 1
+        init_if_matrix[9][18] = 1
+        init_if_matrix[9][33] = 1
+        init_if_matrix[9][34] = 1
+
+        init_if_matrix[10][13] = 1
+        init_if_matrix[10][17] = 1
+        init_if_matrix[10][35] = 1
+
+        init_if_matrix[11][19] = 1
+        init_if_matrix[11][27] = 1
+        init_if_matrix[11][36] = 1
+
+        init_if_matrix[12][13] = 1
+
+        init_if_matrix[13][14] = 1
+        init_if_matrix[13][16] = 1
+        init_if_matrix[13][17] = 1
+
+        init_if_matrix[14][16] = 1
+        init_if_matrix[14][18] = 1
+        init_if_matrix[14][26] = 1
+        init_if_matrix[14][27] = 1
+        init_if_matrix[14][29] = 1
+
+        init_if_matrix[15][31] = 1
+        init_if_matrix[15][32] = 1
+
+        init_if_matrix[16][17] = 1
+        init_if_matrix[16][26] = 1
+
+        init_if_matrix[17][35] = 1
+
+        init_if_matrix[18][19] = 1
+        init_if_matrix[18][24] = 1
+        init_if_matrix[18][27] = 1
+        init_if_matrix[18][28] = 1
+        init_if_matrix[18][29] = 1
+
+        init_if_matrix[19][24] = 1
+        init_if_matrix[19][27] = 1
+        init_if_matrix[19][36] = 1
+
+        init_if_matrix[20][24] = 1
+        init_if_matrix[20][25] = 1
+        init_if_matrix[20][27] = 1
+        init_if_matrix[20][36] = 1
+        init_if_matrix[20][37] = 1
+
+        init_if_matrix[21][31] = 1
+
+        init_if_matrix[22][23] = 1
+        init_if_matrix[22][27] = 1
+        init_if_matrix[22][28] = 1
+        init_if_matrix[22][29] = 1
+        init_if_matrix[22][37] = 1
+
+        init_if_matrix[23][31] = 1
+        init_if_matrix[23][37] = 1
+
+        init_if_matrix[24][25] = 1
+        init_if_matrix[24][27] = 1
+        init_if_matrix[24][28] = 1
+        init_if_matrix[24][29] = 1
+        init_if_matrix[24][37] = 1
+
+        init_if_matrix[25][27] = 1
+        init_if_matrix[25][36] = 1
+        init_if_matrix[25][37] = 1
+
+        init_if_matrix[26][27] = 1
+        init_if_matrix[26][29] = 1
+
+        init_if_matrix[27][28] = 1
+        init_if_matrix[27][29] = 1
+        init_if_matrix[27][37] = 1
+
+        init_if_matrix[28][29] = 1
+        init_if_matrix[28][37] = 1
+
+        init_if_matrix[29][33] = 1
+        init_if_matrix[29][34] = 1
+
+        init_if_matrix[30][31] = 1
+        init_if_matrix[30][32] = 1
+
+        init_if_matrix[31][32] = 1
+
+        # make matrix symmetical
+        for i in range(len(init_if_matrix)):
+            for j in range(len(init_if_matrix[0])):
+                if init_if_matrix[i][j] == 1:
+                    init_if_matrix[j][i] = 1
+                    
+        # there is no optimal state for if_matrix, it exists only for base_matrix
+
+        self.state = init_if_matrix
+
+        # set initial base matrix
+        self.base_matrix = np.eye(38, dtype=int)
         
-        state[0]  = [1,0,1,1,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0]
-        state[1]  = [0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0]
-        state[2]  = [1,0,1,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0]
-        state[3]  = [1,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0]
-        state[4]  = [0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0]
-        state[5]  = [0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        state[6]  = [0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1]
-        state[7]  = [1,1,0,1,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,1,1,1,1,1,1,1,0,0,0]
-        state[8]  = [0,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0]
-        state[9]  = [0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0]
-        state[10] = [1,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0]
-        state[11] = [0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0]
-        state[12] = [0,0,0,0,0,0,0,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        state[13] = [0,0,1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-        state[14] = [0,0,1,0,0,0,0,1,0,0,0,0,0,1,1,0,1,0,1,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0]
-        state[15] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0]
-        state[16] = [0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0]
-        state[17] = [0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0]
-        state[18] = [0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,1,0,0,0,0,1,0,0,1,1,1,0,0,0,0,0,0,0,0]
-        state[19] = [0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0]
-        state[20] = [0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,1,1]
-        state[21] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0]
-        state[22] = [0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,1,1,0,0,0,0,0,0,0,1]
-        state[23] = [0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1]
-        state[24] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,1,1,0,1,1,1,0,0,0,0,0,0,0,1]
-        state[25] = [0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0,1,1]
-        state[26] = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,0]
-        state[27] = [0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,1,1,1,0,1,0,1,1,1,1,1,1,0,0,0,0,0,0,0,1]
-        state[28] = [0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,0,1,1,1,0,0,0,0,0,0,0,1]
-        state[29] = [0,0,1,1,0,0,0,1,1,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,1,1,1,1,0,0,0,1,1,0,0,0]
-        state[30] = [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0]
-        state[31] = [0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,0]
-        state[32] = [1,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0]
-        state[33] = [0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0]
-        state[34] = [0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0]
-        state[35] = [1,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0]
-        state[36] = [0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0]
-        state[37] = [0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,1,1,0,1,1,0,0,0,0,0,0,0,0,1]
-
-        state = np.array(state)
-        self.state = np.reshape(state, (-1,1))
-
-        return self.state, {}
+        return self.state, self.base_matrix, {}
 
     def clustering(self, state, correlation_matrix):
         
@@ -481,9 +440,25 @@ class Moduleviser(gym.Env):
             else:
                 w[3][m] += learning_rate * (state[3][m] - w[3][m])
 
-        a = 0.5
-        b = 0.5
 
+
+        base_matrix = self.base_matrix
+        print(cluster_result)
+        for i in range(len(cluster_result)):
+            # find nonzero term's index
+            nonzero_indexes = np.nonzero(cluster_result[i])
+            nonzero_indexes = np.array(nonzero_indexes)
+            nonzero_indexes = np.squeeze(nonzero_indexes)
+            
+            # modify base_matrix based on modularized result
+            for j in nonzero_indexes:
+                for k in nonzero_indexes:
+                    base_matrix[j][k] = 1
+        
+        self.base_matrix = base_matrix
+        
+
+    
         # for i in range(len(cluster_result)):
         #     print(cluster_result[i])
         classify_components_into_modules = cluster_result.sum(axis = 1)
@@ -556,17 +531,11 @@ class Moduleviser(gym.Env):
                     clustered_matrix[new_order.index(i)][new_order.index(j)] = 1
                     clustered_matrix[new_order.index(j)][new_order.index(i)] = 1
 
-        # convert modularized_result into base_matrix
-        modularized_result = []
-        base_matrix = self.modularized_result_to_base_matrix(modularized_result)
-
-        optimal_base_matrix = self.modularized_result_to_base_matrix(optimal_modularized_result)
-
         # calculate reward compared to optimal_modularized_result
         reward = 0.0
         for i in range(len(base_matrix)):
             for j in range(len(base_matrix)):
-                if base_matrix[i][j] == optimal_base_matrix[i][j]:
+                if base_matrix[i][j] == opt_base_matrix[i][j]:
                     reward += 1.0
 
         # initialize the S_in and S_out
@@ -585,31 +554,8 @@ class Moduleviser(gym.Env):
                     else: # comp_i and comp_j are not in same module
                         S_out += 1
                         
-                        
+        a = 0.5
+        b = 0.5
         CE = 1 / (a * S_in + b * S_out)
 
-
-
-        # calculate the reward based on rule-based contents.
-        # if CE < 0.9:
-        #     reward = 1
-        # see if components are in single module
-        # 1. 'Adapter A-piliar roof rail', 'Adapter B-piliar roof rail', 'A-pillar inner', 'A-pillar reinforcement', 
-        # 2. 'Back panel', 'Back panel side', 'Back panel upper', 'Body side', 'B-Pillar', 
-        # 3. 'Floor panel', 'Front header', 'Front side rail', 'Front suspension Housing', 
-        # 4. 'Rear floor panel', 'Rear floor side', 'Rear header', 'Rear panel inner lower', 'Rear panel Inner Upper', 'Rear side floor', 
-        #    'Rear side rail','Rear side rail center', 'Rear side rail frt'
-        #    
-
-        return clustered_matrix, CE, new_name_list, reward, correlation_matrix, new_sorted_component_list
-
-    def modularized_result_to_base_matrix(self, modularized_result):
-
-        base_matrix = np.identity(38)
-
-        for i in range(len(modularized_result)):
-            for j in range(len(modularized_result[i])):
-                for k in range(j, len(modularized_result[i])):
-                    base_matrix[name_list.index(modularized_result[i][j])][name_list.index(modularized_result[i][k])] = 1
-
-        return base_matrix
+        return self.state, clustered_matrix, self.base_matrix, CE, new_name_list, reward, correlation_matrix, new_sorted_component_list
