@@ -25,11 +25,328 @@ optimal_modularized_result = [['Adapter B-piliar roof rail', 'Body side', 'Front
 
 
 init_if_matrix = np.eye(38, dtype=int)
+init_if_matrix[0][2] = 1
+init_if_matrix[0][3] = 1
+init_if_matrix[0][7] = 1
+init_if_matrix[0][10] = 1
+init_if_matrix[0][32] = 1
+init_if_matrix[0][35] = 1
 
-opt_if_matrix = []
+init_if_matrix[1][7] = 1
+init_if_matrix[1][8] = 1
+init_if_matrix[1][32] = 1
 
-init_base_matrix = []
-opt_base_matrix = []
+init_if_matrix[2][10] = 1
+init_if_matrix[2][13] = 1
+init_if_matrix[2][14] = 1
+init_if_matrix[2][29] = 1
+init_if_matrix[2][35] = 1
+
+init_if_matrix[3][7] = 1
+init_if_matrix[3][13] = 1
+init_if_matrix[3][29] = 1
+init_if_matrix[3][35] = 1
+
+init_if_matrix[4][5] = 1
+init_if_matrix[4][6] = 1
+init_if_matrix[4][20] = 1
+init_if_matrix[4][25] = 1
+init_if_matrix[4][36] = 1
+
+init_if_matrix[5][6] = 1
+init_if_matrix[5][20] = 1
+
+init_if_matrix[6][20] = 1
+init_if_matrix[6][22] = 1
+init_if_matrix[6][23] = 1
+init_if_matrix[6][37] = 1
+
+init_if_matrix[7][8] = 1
+init_if_matrix[7][14] = 1
+init_if_matrix[7][22] = 1
+init_if_matrix[7][23] = 1
+init_if_matrix[7][28] = 1
+init_if_matrix[7][29] = 1
+init_if_matrix[7][30] = 1
+init_if_matrix[7][31] = 1
+init_if_matrix[7][32] = 1
+init_if_matrix[7][33] = 1
+init_if_matrix[7][34] = 1
+
+init_if_matrix[8][28] = 1
+init_if_matrix[8][29] = 1
+
+init_if_matrix[9][12] = 1
+init_if_matrix[9][13] = 1
+init_if_matrix[9][18] = 1
+init_if_matrix[9][33] = 1
+init_if_matrix[9][34] = 1
+
+init_if_matrix[10][13] = 1
+init_if_matrix[10][17] = 1
+init_if_matrix[10][35] = 1
+
+init_if_matrix[11][19] = 1
+init_if_matrix[11][27] = 1
+init_if_matrix[11][36] = 1
+
+init_if_matrix[12][13] = 1
+
+init_if_matrix[13][14] = 1
+init_if_matrix[13][16] = 1
+init_if_matrix[13][17] = 1
+
+init_if_matrix[14][16] = 1
+init_if_matrix[14][18] = 1
+init_if_matrix[14][26] = 1
+init_if_matrix[14][27] = 1
+init_if_matrix[14][29] = 1
+
+init_if_matrix[15][31] = 1
+init_if_matrix[15][32] = 1
+
+init_if_matrix[16][17] = 1
+init_if_matrix[16][26] = 1
+
+init_if_matrix[17][35] = 1
+
+init_if_matrix[18][19] = 1
+init_if_matrix[18][24] = 1
+init_if_matrix[18][27] = 1
+init_if_matrix[18][28] = 1
+init_if_matrix[18][29] = 1
+
+init_if_matrix[19][24] = 1
+init_if_matrix[19][27] = 1
+init_if_matrix[19][36] = 1
+
+init_if_matrix[20][24] = 1
+init_if_matrix[20][25] = 1
+init_if_matrix[20][27] = 1
+init_if_matrix[20][36] = 1
+init_if_matrix[20][37] = 1
+
+init_if_matrix[21][31] = 1
+
+init_if_matrix[22][23] = 1
+init_if_matrix[22][27] = 1
+init_if_matrix[22][28] = 1
+init_if_matrix[22][29] = 1
+init_if_matrix[22][37] = 1
+
+init_if_matrix[23][31] = 1
+init_if_matrix[23][37] = 1
+
+init_if_matrix[24][25] = 1
+init_if_matrix[24][27] = 1
+init_if_matrix[24][28] = 1
+init_if_matrix[24][29] = 1
+init_if_matrix[24][37] = 1
+
+init_if_matrix[25][27] = 1
+init_if_matrix[25][36] = 1
+init_if_matrix[25][37] = 1
+
+init_if_matrix[26][27] = 1
+init_if_matrix[26][29] = 1
+
+init_if_matrix[27][28] = 1
+init_if_matrix[27][29] = 1
+init_if_matrix[27][37] = 1
+
+init_if_matrix[28][29] = 1
+init_if_matrix[28][37] = 1
+
+init_if_matrix[29][33] = 1
+init_if_matrix[29][34] = 1
+
+init_if_matrix[30][31] = 1
+init_if_matrix[30][32] = 1
+
+init_if_matrix[31][32] = 1
+
+# make matrix symmetical
+for i in range(len(init_if_matrix)):
+    for j in range(len(init_if_matrix[0])):
+        if init_if_matrix[i][j] == 1:
+            init_if_matrix[j][i] = 1
+            
+# there is no optimal state for if_matrix, it exists only for base_matrix
+
+# set initial base matrix
+init_base_matrix = np.eye(38, dtype=int)
+
+# make optimal base matrix
+opt_base_matrix = np.eye(38, dtype=int)
+
+opt_base_matrix[0][2] = 1
+opt_base_matrix[0][3] = 1
+opt_base_matrix[0][10] = 1
+opt_base_matrix[0][13] = 1
+opt_base_matrix[0][17] = 1
+opt_base_matrix[0][35] = 1
+
+opt_base_matrix[1][7] = 1
+opt_base_matrix[1][15] = 1
+opt_base_matrix[1][21] = 1
+opt_base_matrix[1][23] = 1
+opt_base_matrix[1][30] = 1
+opt_base_matrix[1][31] = 1
+opt_base_matrix[1][32] = 1
+
+opt_base_matrix[2][3] = 1
+opt_base_matrix[2][10] = 1
+opt_base_matrix[2][13] = 1
+opt_base_matrix[2][17] = 1
+opt_base_matrix[2][35] = 1
+
+opt_base_matrix[3][10] = 1
+opt_base_matrix[3][13] = 1
+opt_base_matrix[3][17] = 1
+opt_base_matrix[3][35] = 1
+
+opt_base_matrix[4][5] = 1
+opt_base_matrix[4][6] = 1
+opt_base_matrix[4][20] = 1
+opt_base_matrix[4][25] = 1
+opt_base_matrix[4][36] = 1
+
+opt_base_matrix[5][6] = 1
+opt_base_matrix[5][20] = 1
+opt_base_matrix[5][25] = 1
+opt_base_matrix[5][36] = 1
+
+opt_base_matrix[6][20] = 1
+opt_base_matrix[6][25] = 1
+opt_base_matrix[6][36] = 1
+
+opt_base_matrix[7][15] = 1
+opt_base_matrix[7][21] = 1
+opt_base_matrix[7][23] = 1
+opt_base_matrix[7][30] = 1
+opt_base_matrix[7][31] = 1
+opt_base_matrix[7][32] = 1
+
+opt_base_matrix[8][11] = 1
+opt_base_matrix[8][18] = 1
+opt_base_matrix[8][19] = 1
+opt_base_matrix[8][22] = 1
+opt_base_matrix[8][24] = 1
+opt_base_matrix[8][27] = 1
+opt_base_matrix[8][28] = 1
+opt_base_matrix[8][29] = 1
+opt_base_matrix[8][37] = 1
+
+opt_base_matrix[9][12] = 1
+opt_base_matrix[9][14] = 1
+opt_base_matrix[9][16] = 1
+opt_base_matrix[9][26] = 1
+opt_base_matrix[9][33] = 1
+opt_base_matrix[9][34] = 1
+
+opt_base_matrix[10][13] = 1
+opt_base_matrix[10][17] = 1
+opt_base_matrix[10][35] = 1
+
+opt_base_matrix[11][18] = 1
+opt_base_matrix[11][19] = 1
+opt_base_matrix[11][22] = 1
+opt_base_matrix[11][24] = 1
+opt_base_matrix[11][27] = 1
+opt_base_matrix[11][28] = 1
+opt_base_matrix[11][29] = 1
+opt_base_matrix[11][37] = 1
+
+opt_base_matrix[12][14] = 1
+opt_base_matrix[12][16] = 1
+opt_base_matrix[12][26] = 1
+opt_base_matrix[12][33] = 1
+opt_base_matrix[12][34] = 1
+
+opt_base_matrix[13][17] = 1
+opt_base_matrix[13][35] = 1
+
+opt_base_matrix[14][16] = 1
+opt_base_matrix[14][26] = 1
+opt_base_matrix[14][33] = 1
+opt_base_matrix[14][34] = 1
+
+opt_base_matrix[15][21] = 1
+opt_base_matrix[15][23] = 1
+opt_base_matrix[15][30] = 1
+opt_base_matrix[15][31] = 1
+opt_base_matrix[15][32] = 1
+
+opt_base_matrix[16][26] = 1
+opt_base_matrix[16][33] = 1
+opt_base_matrix[16][34] = 1
+
+opt_base_matrix[17][35] = 1
+
+opt_base_matrix[18][19] = 1
+opt_base_matrix[18][22] = 1
+opt_base_matrix[18][24] = 1
+opt_base_matrix[18][27] = 1
+opt_base_matrix[18][28] = 1
+opt_base_matrix[18][29] = 1
+opt_base_matrix[18][37] = 1
+
+opt_base_matrix[19][22] = 1
+opt_base_matrix[19][24] = 1
+opt_base_matrix[19][27] = 1
+opt_base_matrix[19][28] = 1
+opt_base_matrix[19][29] = 1
+opt_base_matrix[19][37] = 1
+
+opt_base_matrix[20][25] = 1
+opt_base_matrix[20][36] = 1
+
+opt_base_matrix[21][23] = 1
+opt_base_matrix[21][30] = 1
+opt_base_matrix[21][31] = 1
+opt_base_matrix[21][32] = 1
+
+opt_base_matrix[22][24] = 1
+opt_base_matrix[22][27] = 1
+opt_base_matrix[22][28] = 1
+opt_base_matrix[22][29] = 1
+opt_base_matrix[22][37] = 1
+
+opt_base_matrix[23][30] = 1
+opt_base_matrix[23][31] = 1
+opt_base_matrix[23][32] = 1
+
+opt_base_matrix[24][27] = 1
+opt_base_matrix[24][28] = 1
+opt_base_matrix[24][29] = 1
+opt_base_matrix[24][37] = 1
+
+opt_base_matrix[25][36] = 1
+
+opt_base_matrix[26][33] = 1
+opt_base_matrix[26][34] = 1
+
+opt_base_matrix[27][28] = 1
+opt_base_matrix[27][29] = 1
+opt_base_matrix[27][37] = 1
+
+opt_base_matrix[28][29] = 1
+opt_base_matrix[28][37] = 1
+
+opt_base_matrix[29][37] = 1
+
+opt_base_matrix[30][31] = 1
+opt_base_matrix[30][32] = 1
+
+opt_base_matrix[31][32] = 1
+
+opt_base_matrix[33][34] = 1
+
+# make matrix symmetical
+for i in range(len(init_if_matrix)):
+    for j in range(len(init_if_matrix[0])):
+        if opt_base_matrix[i][j] == 1:
+            opt_base_matrix[j][i] = 1
 
 class Moduleviser(gym.Env):
 
