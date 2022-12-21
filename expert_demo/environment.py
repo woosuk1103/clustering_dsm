@@ -206,8 +206,8 @@ class Moduleviser(gym.Env):
 
         self.CE = 0
 
-        self.low = np.zeros(shape=(1444,), dtype=np.int32)
-        self.high = np.ones(shape=(1444,), dtype=np.int32)
+        self.low = np.zeros(shape=(1444,), dtype=np.float32)
+        self.high = np.ones(shape=(1444,), dtype=np.float32)
 
         self.action_space = spaces.Discrete(2888)
         self.observation_space = spaces.Box(self.low, self.high, dtype=np.float32)
@@ -443,7 +443,7 @@ class Moduleviser(gym.Env):
 
 
         base_matrix = self.base_matrix
-        print(cluster_result)
+        print('hi',cluster_result)
         for i in range(len(cluster_result)):
             # find nonzero term's index
             nonzero_indexes = np.nonzero(cluster_result[i])

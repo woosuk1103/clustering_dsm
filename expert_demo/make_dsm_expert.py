@@ -1,29 +1,29 @@
 import numpy as np
-from environment import Moduleviser
+import matplotlib.pyplot as plt
 import plotly.express as px
-import pandas as pd
 
+from environment import Moduleviser
 env = Moduleviser()
 
 trajectories = []
+trajectories_base = []
 correlation_matrices = []
 new_sorted_component_lists = []
-episode_step = 0
 
 correlation_matrix = np.zeros((38,38))
 
-colorscale = [[0, '#272D31'],[.5, '#ffffff'],[1, '#ffffff']]
-
 for episode in range(10): # n_trajectories : 10
     trajectory = []
+    trajectory_base = []
     step = 0
 
     env.reset()
-    print("episode_step", episode_step)
+    print("episode %d"%episode)
 
     while True: 
-        # env.render()
-               
+
+        ################################ 1               
+        # make step anyway!
         print("step", step)
 
         input_row = input("Insert the row number you want to modify: ")
@@ -33,66 +33,44 @@ for episode in range(10): # n_trajectories : 10
         col = int(input_col)
 
         action = row * 38 + col
+        ################################ 1
+        
         state, clustered_matrix, base_matrix, CE, name_list, reward, correlation_matrix, new_sorted_component_list, done, _ = env.step(action, correlation_matrix)
-
-        temp = 0
-        for i in range(len(clustered_matrix)):
-            for j in range(len(clustered_matrix[0])):
-                if clustered_matrix[i][j] == 1:
-                    temp += 1
-        print(temp)
-        print(new_sorted_component_list)
-        
-        for i in range(len(base_matrix)):
-            print(base_matrix[i])    
             
-            
+        # should set calculated figure to show the modularity
         print("CE:", CE)
-        # global 
 
-        if ((step % 10) == 0):
-            df = pd.DataFrame(state)
-            df.to_csv('%dth sample.csv'%step, index=False)
-        
+        # visualization part        
+        # plt.matshow(state)
+        # plt.show()
         fig = px.imshow(state, labels=dict(x="components", y="components", color="I/F"), x = name_list, y = name_list)
         fig.show()
 
-        # for i in range(len(correlation_matrix)):
-        #     print(correlation_matrix[i])
-
-        # colorscale = [[0, '#272D31'],[.5, '#ffffff'],[1, '#ffffff']]
-        # # font=['#FCFCFC', '#00EE00', '#008B00', '#004F00', '#660000', '#CD0000', '#FF3030']
-
-        # fig = ff.create_table(state, colorscale=colorscale)
-        # fig.layout.width=250
-        # fig.show()
-
-
-        if step > 180: # trajectory_length : 150
+        
+        # saving part
+        trajectory.append(state)
+        trajectory.append(action)
+        trajectory_base.append(base_matrix)
+        
+             
+        if done == True:
             break
 
-        clustered_matrix_in_array = np.zeros(1444)
-        for i in range(len(clustered_matrix)):
-            for j in range(len(clustered_matrix[0])):
-                idx = i * 38 + j
-                clustered_matrix_in_array[idx] = clustered_matrix[i][j]
-                
-        clustered_matrix_in_array = np.append(clustered_matrix_in_array, np.array(action))
-        trajectory.append(clustered_matrix_in_array)
         step += 1
 
     trajectories.append(trajectory)
-
+    trajectories_base.append(trajectory)
     correlation_matrices.append(correlation_matrix)
     new_sorted_component_lists.append(new_sorted_component_list)
-    episode_step += 1
 
-print(new_sorted_component_lists[-1][-1])
+
 
 np_trajectories = np.array(trajectories, float)
+np_trajectories_base = np.array(trajectories_base, float)
 np_correlation_matrices = np.array(correlation_matrices, float)
 np_new_sorted_component_lists = np.array(new_sorted_component_lists, dtype=object)
 
 np.save("expert_trajectories", arr=np_trajectories)
+np.save("expert_trajectories_base", arr=np_trajectories_base)
 np.save("correlation_matrices", arr=np_correlation_matrices)
 np.save("new_sorted_component_lists", arr=np_new_sorted_component_lists)
