@@ -21,3 +21,5 @@ a = np.squeeze(a)
 
 print(a)
 print(a.shape)
+
+print(3==3.0)

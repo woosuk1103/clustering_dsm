@@ -213,6 +213,7 @@ class Moduleviser(gym.Env):
         self.observation_space = spaces.Box(self.low, self.high, dtype=np.float32)
 
         self.name_list = name_list
+        self.opt_base_matrix = opt_base_matrix
 
     def step(self, action, correlation_matrix):
 
@@ -229,8 +230,9 @@ class Moduleviser(gym.Env):
         
         self.state, clustered_matrix, self.base_matrix, self.CE, self.name_list, reward, correlation_matrix, new_sorted_component_list = self.clustering(state, correlation_matrix)
         
+        done = False
         # compare present base_matrix with optimal base_matrix 
-        if self.base_matrix.all() == opt_base_matrix.all():
+        if np.array_equal(self.base_matrix, self.opt_base_matrix):
             done = True
         
         return self.state, clustered_matrix, self.base_matrix, self.CE, self.name_list, reward, correlation_matrix, new_sorted_component_list, done, {}
@@ -440,16 +442,15 @@ class Moduleviser(gym.Env):
             else:
                 w[3][m] += learning_rate * (state[3][m] - w[3][m])
 
-
-
         base_matrix = self.base_matrix
-        print('hi',cluster_result)
+
         for i in range(len(cluster_result)):
             # find nonzero term's index
             nonzero_indexes = np.nonzero(cluster_result[i])
             nonzero_indexes = np.array(nonzero_indexes)
             nonzero_indexes = np.squeeze(nonzero_indexes)
             
+            print(nonzero_indexes)
             # modify base_matrix based on modularized result
             for j in nonzero_indexes:
                 for k in nonzero_indexes:
@@ -458,16 +459,12 @@ class Moduleviser(gym.Env):
         self.base_matrix = base_matrix
         
 
-    
-        # for i in range(len(cluster_result)):
-        #     print(cluster_result[i])
         classify_components_into_modules = cluster_result.sum(axis = 1)
-        # print(classify_components_into_modules)
         sorted_classify_components_into_modules = copy.deepcopy(classify_components_into_modules)
         sorted_classify_components_into_modules.sort()
         
         reversed = sorted_classify_components_into_modules[::-1]
-        # print(reversed)
+
         new_order = []
         new_name_list = []
         check = np.ones(shape=(38,), dtype=np.int32)
@@ -489,26 +486,20 @@ class Moduleviser(gym.Env):
                 new_sorted_component_list[i].append(new_name_list_second[0])
                 del new_name_list_second[0]
 
-        # print(new_sorted_component_list)
 
         # convert new_sorted_component_list into original numbers
-
         for i in range(len(new_sorted_component_list)):
             for j in range(int(len(new_sorted_component_list[i]))):
                 for k in range(len(name_list)):
                     if new_sorted_component_list[i][j] == name_list[k]:
                         new_sorted_component_list[i][j] = k
         
-        # print(new_sorted_component_list)
 
         # update correlation_matrix based on new_sorted_component_list
         for i in range(len(new_sorted_component_list)):
             for j in range(int(len(new_sorted_component_list[i]))):
                 for k in range(int(len(new_sorted_component_list[i]))):
                     if j != k:
-                        # print(new_sorted_component_list[i][j])
-                        # print(new_sorted_component_list[i][k])
-                        # print(correlation_matrix)
                         correlation_matrix[new_sorted_component_list[i][j]][new_sorted_component_list[i][k]] += 1
                 
         total = 0
@@ -517,10 +508,7 @@ class Moduleviser(gym.Env):
                 total += correlation_matrix[i][j]
 
         correlation_matrix /= total
-
-        # for i in range(len(self.correlation_matrix)):
-        #     print("self.correlation_matrix:[%d]"%i,self.correlation_matrix[i])
-
+        
         # update the components sequence        
         clustered_matrix = np.eye(38, dtype=np.int32)
 
